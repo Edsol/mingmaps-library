@@ -107,7 +107,7 @@ function createDestinationInfoWindow(point) {
 
     var duration_title = document.createElement("span");
     duration_title.innerHTML = 'Duranta: ';
-    duration_title.setAttribute('class', 'duration');
+    duration_title.setAttribute('class', 'duration_title');
 
     var duration_value = document.createElement("span");
     duration_value.innerHTML = leg.duration.text;
@@ -119,14 +119,15 @@ function createDestinationInfoWindow(point) {
     div_distance.appendChild(distance_value);
 
     var div_duration = document.createElement('div');
-    div_distance.setAttribute('class', 'duration');
+    div_duration.setAttribute('class', 'duration');
     div_duration.appendChild(duration_title);
     div_duration.appendChild(duration_value);
 
     var content = document.createElement("div");
+    content.setAttribute('class', 'destination_infowindow');
     content.appendChild(div_distance);
     content.appendChild(div_duration);
-    content.setAttribute('class', 'destination_infowindow');
+
 
     route_infowindow = newInfoWindow(map, content, {
       position: last_step.end_location,
