@@ -21,7 +21,7 @@ function drawRouteBetweenPoints(map, start_point, end_point, show_info = false, 
     } else {
       result_routes = drawRouteLine(map, response, false, true, function (fastest, shortest) {
         if (show_info) {
-          showInfoWindow(fastest);
+          createDestinationInfoWindow(fastest);
         }
       });
     }
@@ -29,8 +29,6 @@ function drawRouteBetweenPoints(map, start_point, end_point, show_info = false, 
       callback(status, response);
     }
   });
-
-
 }
 
 /**
@@ -94,22 +92,41 @@ function drawRouteLine(map, response, show_shortest = false, show_fastest = true
   };
 }
 
-function showInfoWindow(point) {
-  console.log()
+function createDestinationInfoWindow(point) {
   if (point) {
     leg = point.legs[0];
     last_step = leg.steps[leg.steps.length - 1];
 
-    content = el('div', [
-      el('div', [
-        el('span.font-weight-bold', 'Distanza: '),
-        el('span', leg.distance.text)
-      ]),
-      el('div', [
-        el('span.font-weight-bold', 'Duranta: '),
-        el('span', leg.duration.text)
-      ])
-    ]);
+    var distance_title = document.createElement("span");
+    distance_title.innerHTML = 'Distanza: ';
+    distance_title.setAttribute('class', 'distance_title');
+
+    var distance_value = document.createElement("span");
+    distance_value.innerHTML = leg.distance.text;
+    distance_value.setAttribute('class', 'distance_value');
+
+    var duration_title = document.createElement("span");
+    duration_title.innerHTML = 'Duranta: ';
+    duration_title.setAttribute('class', 'duration');
+
+    var duration_value = document.createElement("span");
+    duration_value.innerHTML = leg.duration.text;
+    duration_value.setAttribute('class', 'duration_value');
+
+    var div_distance = document.createElement('div');
+    div_distance.setAttribute('class', 'distance');
+    div_distance.appendChild(distance_title);
+    div_distance.appendChild(distance_value);
+
+    var div_duration = document.createElement('div');
+    div_distance.setAttribute('class', 'duration');
+    div_duration.appendChild(duration_title);
+    div_duration.appendChild(duration_value);
+
+    var content = document.createElement("div");
+    content.appendChild(div_distance);
+    content.appendChild(div_duration);
+    content.setAttribute('class', 'destination_infowindow');
 
     route_infowindow = newInfoWindow(map, content, {
       position: last_step.end_location,
