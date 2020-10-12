@@ -1,10 +1,16 @@
 /**
 * Add a "Place Autocomplete Listener" on specified element
-* @param {element} element - Element to bind at listener
+* @param {String} element - ID of element to bind at listener
 * @return {function} callback - Callback function
 */
-function addAddressListener(element, callback) {
-  var autocomplete = new google.maps.places.Autocomplete(element);
+function addAddressListener(element_id, country, callback) {
+  address_search = document.getElementById(element_id);
+  // loadLanguage();
+
+  var options = {
+    componentRestrictions: { country: country }
+  };
+  var autocomplete = new google.maps.places.Autocomplete(address_search, options);
 
   autocomplete.addListener('place_changed', function () {
 
