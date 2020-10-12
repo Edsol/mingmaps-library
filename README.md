@@ -30,6 +30,20 @@ Mingmaps.Map.initMap('map',{
   zoom: 6,
   disableDefaultUI: true,
   mapTypeId: 'hybrid'
+});
+```
+
+### Init map with callback
+
+```javascript
+Mingmaps.Map.initMap('map',{
+  center: {
+    lat: 41.4265774,
+    lng: 14.4789369
+  },
+  zoom: 6,
+  disableDefaultUI: true,
+  mapTypeId: 'hybrid'
 },function(map){
   // operation after create map
 });
