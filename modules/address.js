@@ -1,11 +1,21 @@
+// import { Translator } from './translator.js';
+
+
+// var Translator;
+
+// export function constructor() {
+//   this.Translator = new Translator();
+//   this.Translator.loadLanguage();
+// }
+
 /**
 * Add a "Place Autocomplete Listener" on specified element
 * @param {String} element - ID of element to bind at listener
 * @return {function} callback - Callback function
 */
-function addAddressListener(element_id, country, callback) {
+export function addAddressListener(element_id, country, callback) {
   address_search = document.getElementById(element_id);
-  // loadLanguage();
+
 
   var options = {
     componentRestrictions: { country: country }

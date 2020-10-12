@@ -1,11 +1,14 @@
+import * as Infowindow from './infowindow.js';
+
 /**
- * Draw route bewteen two points
- * @param {map} map Oggetto map
- * @param {Object} start_point Start point object
- * @param {Object} end_point End point object
- */
-function drawRouteBetweenPoints(map, start_point, end_point, show_info = false, callback) {
+* Draw route bewteen two points
+* @param {map} map Oggetto map
+* @param {Object} start_point Start point object
+* @param {Object} end_point End point object
+*/
+export function drawRouteBetweenPoints(map, start_point, end_point, show_info = false, callback) {
   let directionsService = new google.maps.DirectionsService();
+  var result_routes = [];
 
   var route = {
     origin: start_point.getPosition(),
@@ -19,16 +22,20 @@ function drawRouteBetweenPoints(map, start_point, end_point, show_info = false, 
     if (status !== google.maps.DirectionsStatus.OK) {
       console.log('direction NOT ok');
     } else {
-      result_routes = drawRouteLine(map, response, false, true, function (fastest, shortest) {
+      route = drawRouteLine(map, response, false, true, function (fastest, shortest) {
         if (show_info) {
           createDestinationInfoWindow(fastest);
         }
+
+        result_routes.push(route);
       });
     }
     if (typeof callback == "function") {
       callback(status, response);
     }
   });
+
+  return result_routes;
 }
 
 /**
@@ -38,11 +45,11 @@ function drawRouteBetweenPoints(map, start_point, end_point, show_info = false, 
  * @param {bool} show_shortest flag per visualizzare o nascondere il percorso più corto
  * @param {bool} show_fastest flag per visualizzare o nascondere il percorso più veloce
  */
-function drawRouteLine(map, response, show_shortest = false, show_fastest = true, callback) {
+export function drawRouteLine(map, response, show_shortest = false, show_fastest = true, callback) {
   var shortest_route, fastest_route;
   var fastest = Number.MAX_VALUE,
     shortest = Number.MAX_VALUE;
-  directionsDisplay = new google.maps.DirectionsRenderer();
+  var directionsDisplay = new google.maps.DirectionsRenderer();
   directionsDisplay.setMap(map);
 
   response.routes.forEach(function (route) {
@@ -92,10 +99,10 @@ function drawRouteLine(map, response, show_shortest = false, show_fastest = true
   };
 }
 
-function createDestinationInfoWindow(point) {
+export function createDestinationInfoWindow(point) {
   if (point) {
-    leg = point.legs[0];
-    last_step = leg.steps[leg.steps.length - 1];
+    var leg = point.legs[0];
+    var last_step = leg.steps[leg.steps.length - 1];
 
     var distance_title = document.createElement("span");
     distance_title.innerHTML = 'Distanza: ';
@@ -129,9 +136,11 @@ function createDestinationInfoWindow(point) {
     content.appendChild(div_duration);
 
 
-    route_infowindow = newInfoWindow(map, content, {
+    var route_infowindow = Infowindow.newInfoWindow(map, content, {
       position: last_step.end_location,
       pixelOffset: new google.maps.Size(0, -30)
     }, true);
+
+    return route_infowindow;
   }
 }

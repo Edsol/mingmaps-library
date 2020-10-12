@@ -7,7 +7,7 @@
 * @param {Function} callback - Callback function
 * @return {InfoWindow} Infowindow Object
 */
-function newInfoWindow(map, content, options = {}, open = false, callback) {
+export function newInfoWindow(map, content, options = {}, open = false, callback) {
   var infowindow = new google.maps.InfoWindow({
     content: content,
     options

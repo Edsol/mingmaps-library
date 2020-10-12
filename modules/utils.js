@@ -1,12 +1,13 @@
+
 /**
 * Dato un punto, un raggio e lista di posizioni restituisce quali marker sono all'interno e quali all'esterno del raggio
 * @param {Array} center_position - Punto centrale da cui partire la ricerca
 * @param {int} radius - Raggio del punto in cui ricercare
 * @param {Array} markers Lista dei marker sui cui effettuare la ricerca
 */
-function findMarkerInsideCircle(center_position, radius, markers, callback) {
-  inside = [];
-  outside = [];
+export function findMarkerInsideCircle(center_position, radius, markers, callback) {
+  var inside = [];
+  var outside = [];
 
   markers.forEach(function (element) {
     if (google.maps.geometry.spherical.computeDistanceBetween(element.getPosition(), center_position) <= radius) {
