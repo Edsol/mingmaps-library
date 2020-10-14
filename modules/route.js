@@ -24,17 +24,16 @@ export function drawRouteBetweenPoints(map, start_point, end_point, show_info = 
     } else {
       route = drawRouteLine(map, response, false, true, function (fastest, shortest) {
         if (show_info) {
-          createDestinationInfoWindow(fastest);
+          fastest['infowindow'] = createDestinationInfoWindow(fastest.route);
         }
 
-        result_routes.push(route);
+        result_routes.push(fastest);
       });
     }
     if (typeof callback == "function") {
       callback(status, response);
     }
   });
-
   return result_routes;
 }
 
@@ -58,34 +57,43 @@ export function drawRouteLine(map, response, show_shortest = false, show_fastest
   })
 
   response.routes.forEach(function (route, index) {
-    var polylineOptions;
-
     if (route.legs[0].duration.value == fastest && show_shortest) {
-      shortest_route = route;
-      polylineOptions = {
-        strokeColor: "blue",
-        strokeOpacity: 1,
-        strokeWeight: 6,
-      };
-    }
-    if (route.legs[0].distance.value == shortest && show_fastest) {
-      fastest_route = route;
-      polylineOptions = {
-        strokeColor: "green",
-        strokeOpacity: 1,
-        strokeWeight: 6,
-      };
-    }
-
-    if (polylineOptions) {
-      new google.maps.DirectionsRenderer({
+      var direction_render = new google.maps.DirectionsRenderer({
         map: map,
         directions: response,
         routeIndex: index,
-        polylineOptions: polylineOptions,
+        polylineOptions: {
+          strokeColor: "blue",
+          strokeOpacity: 1,
+          strokeWeight: 6,
+        },
         suppressMarkers: true,
         preserveViewport: true
-      })
+      });
+
+      shortest_route = {
+        route: route,
+        direction: direction_render
+      };
+    }
+    if (route.legs[0].distance.value == shortest && show_fastest) {
+      var direction_render = new google.maps.DirectionsRenderer({
+        map: map,
+        directions: response,
+        routeIndex: index,
+        polylineOptions: {
+          strokeColor: "green",
+          strokeOpacity: 1,
+          strokeWeight: 6,
+        },
+        suppressMarkers: true,
+        preserveViewport: true
+      });
+
+      fastest_route = {
+        route: route,
+        direction: direction_render
+      };
     }
   })
 

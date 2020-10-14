@@ -10,6 +10,5 @@ class Main {
   }
 }
 
-
 export { Main, Map, Marker, Address, Route, Infowindow, Utils };
 
