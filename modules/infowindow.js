@@ -23,3 +23,24 @@ export function newInfoWindow(map, content, options = {}, open = false, callback
 
   return infowindow;
 }
+
+/**
+* Close a specific infowindow
+* @param {Object} infowindow - Infowindow object
+*/
+export function close(infowindow) {
+  infowindow.close();
+}
+
+/**
+* Close all infowindow
+* @param {Array} infowindow_list - List of infowindow
+*/
+export function closeAll(infowindow_list) {
+  if (infowindow_list) {
+    infowindow_list = Object.values(infowindow_list);
+    infowindow_list.forEach(function (index) {
+      index.close();
+    });
+  }
+}
