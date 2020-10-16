@@ -24,7 +24,7 @@ export function drawRouteBetweenPoints(map, start_point, end_point, show_info = 
     } else {
       route = drawRouteLine(map, response, false, true, function (fastest, shortest) {
         if (show_info) {
-          fastest['infowindow'] = createDestinationInfoWindow(fastest.route);
+          fastest['infowindow'] = createDestinationInfoWindow(map, fastest.route);
         }
 
         result_routes.push(fastest);
@@ -107,7 +107,7 @@ export function drawRouteLine(map, response, show_shortest = false, show_fastest
   };
 }
 
-export function createDestinationInfoWindow(point) {
+export function createDestinationInfoWindow(map, point) {
   if (point) {
     var leg = point.legs[0];
     var last_step = leg.steps[leg.steps.length - 1];
