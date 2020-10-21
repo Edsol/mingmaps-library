@@ -1,5 +1,7 @@
 import * as Infowindow from './infowindow.js';
 
+let directionsService = new google.maps.DirectionsService();
+var delayFactor = 1;
 /**
 * Draw route bewteen two points
 * @param {map} map Oggetto map
@@ -7,8 +9,7 @@ import * as Infowindow from './infowindow.js';
 * @param {Object} end_point End point object
 */
 export function drawRouteBetweenPoints(map, start_point, end_point, show_info = false, callback) {
-  let directionsService = new google.maps.DirectionsService();
-  var result_routes = [];
+  var result_routes;
 
   var route = {
     origin: start_point.getPosition(),
@@ -18,23 +19,40 @@ export function drawRouteBetweenPoints(map, start_point, end_point, show_info = 
     travelMode: google.maps.TravelMode.DRIVING
   };
 
-  directionsService.route(route, function (response, status) {
-    if (status !== google.maps.DirectionsStatus.OK) {
-      console.log('direction NOT ok');
-    } else {
-      route = drawRouteLine(map, response, false, true, function (fastest, shortest) {
-        if (show_info) {
-          fastest['infowindow'] = createDestinationInfoWindow(map, fastest.route);
-        }
+  getDirectionsRoute(route, function (status, response) {
+    drawRouteLine(map, response, false, true, (fastest, shortest) => {
+      if (show_info) {
+        fastest['infowindow'] = createDestinationInfoWindow(map, fastest.route);
+      }
 
-        result_routes.push(fastest);
-      });
-    }
-    if (typeof callback == "function") {
-      callback(status, response);
+      result_routes = {
+        route: fastest.route,
+        direction: fastest.direction,
+        infowindow: fastest.infowindow
+      };
+
+      return result_routes;
+    });
+  });
+
+}
+
+function getDirectionsRoute(request, callback) {
+  directionsService.route(request, (response, status) => {
+    if (status === google.maps.DirectionsStatus.OK) {
+      if (typeof callback == "function") {
+        callback(status, response);
+      }
+    } else if (status === google.maps.DirectionsStatus.OVER_QUERY_LIMIT) {
+      console.log("OVER_QUERY_LIMIT", delayFactor);
+      delayFactor++;
+      setTimeout(function () {
+        getDirectionsRoute(request, callback);
+      }, delayFactor * 1000);
+    } else {
+      console.log("Route: " + status);
     }
   });
-  return result_routes;
 }
 
 /**
@@ -77,12 +95,14 @@ export function drawRouteLine(map, response, show_shortest = false, show_fastest
       };
     }
     if (route.legs[0].distance.value == shortest && show_fastest) {
+      var random_color = "#" + Math.floor(Math.random() * 16777215).toString(16);
       var direction_render = new google.maps.DirectionsRenderer({
         map: map,
         directions: response,
         routeIndex: index,
         polylineOptions: {
-          strokeColor: "green",
+          // strokeColor: "green",
+          strokeColor: random_color,
           strokeOpacity: 1,
           strokeWeight: 6,
         },
@@ -91,6 +111,7 @@ export function drawRouteLine(map, response, show_shortest = false, show_fastest
       });
 
       fastest_route = {
+        random_color: random_color,
         route: route,
         direction: direction_render
       };
