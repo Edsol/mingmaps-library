@@ -31,6 +31,10 @@ export function drawRouteBetweenPoints(map, start_point, end_point, show_info = 
         infowindow: fastest.infowindow
       };
 
+      if (typeof callback == "function") {
+        callback(status, response, result_routes);
+      }
+
       return result_routes;
     });
   });
@@ -86,7 +90,7 @@ export function drawRouteLine(map, response, show_shortest = false, show_fastest
           strokeWeight: 6,
         },
         suppressMarkers: true,
-        preserveViewport: true
+        preserveViewport: false
       });
 
       shortest_route = {
@@ -107,7 +111,7 @@ export function drawRouteLine(map, response, show_shortest = false, show_fastest
           strokeWeight: 6,
         },
         suppressMarkers: true,
-        preserveViewport: true
+        preserveViewport: false
       });
 
       fastest_route = {
