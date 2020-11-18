@@ -1,5 +1,5 @@
 import * as Infowindow from './infowindow.js';
-import _ from "../node_modules/lodash-es/lodash.js"
+import forEach from "../node_modules/lodash-es/_arrayEach.js"
 
 let directionsService = new google.maps.DirectionsService();
 var delayFactor = 1;
@@ -74,12 +74,12 @@ export function drawRouteLine(map, response, show_shortest = false, show_fastest
   var directionsDisplay = new google.maps.DirectionsRenderer();
   directionsDisplay.setMap(map);
 
-  _.forEach(response.routes, function (route) {
+  forEach(response.routes, function (route) {
     if (getDistanceValue(route) < shortest) shortest = getDistanceValue(route);
     if (getDurationValue(route) < fastest) fastest = getDurationValue(route);
   });
 
-  _.forEach(response.routes, function (route, index) {
+  forEach(response.routes, function (route, index) {
     if (getDurationValue(route) == fastest && show_shortest) {
       var direction_render = new google.maps.DirectionsRenderer({
         map: map,

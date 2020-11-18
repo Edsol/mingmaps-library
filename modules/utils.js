@@ -1,4 +1,4 @@
-import _ from "../node_modules/lodash-es/lodash.js"
+import forEach from "../node_modules/lodash-es/_arrayEach.js"
 
 /**
 * Dato un punto, un raggio e lista di posizioni restituisce quali marker sono all'interno e quali all'esterno del raggio
@@ -10,7 +10,7 @@ export function findMarkerInsideCircle(center_position, radius, markers, callbac
   var inside = [];
   var outside = [];
 
-  _.forEach(markers, function (element) {
+  forEach(markers, function (element) {
     if (google.maps.geometry.spherical.computeDistanceBetween(element.getPosition(), center_position) <= radius) {
       inside.push(element);
     } else {

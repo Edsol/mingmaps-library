@@ -1,4 +1,4 @@
-import _ from "../node_modules/lodash-es/lodash.js"
+import forEach from "../node_modules/lodash-es/_arrayEach.js"
 
 /** 
 * Create new infowindow
@@ -41,7 +41,7 @@ export function close(infowindow) {
 export function closeAll(infowindow_list) {
   if (infowindow_list) {
     infowindow_list = Object.values(infowindow_list);
-    _.forEach(infowindow_list, function (index) {
+    forEach(infowindow_list, function (index) {
       index.close();
     });
   }
