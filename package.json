@@ -1,0 +1,22 @@
+{
+  "name": "mingmaps-library",
+  "version": "1.0.0",
+  "description": "A very simple and quickly library to init, use and manipulate Google map, their markers,routes and infowindows.",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Edsol/mingmaps-library.git"
+  },
+  "author": "Edsol",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Edsol/mingmaps-library/issues"
+  },
+  "homepage": "https://github.com/Edsol/mingmaps-library#readme",
+  "dependencies": {
+    "lodash-es": "^4.17.15"
+  }
+}
