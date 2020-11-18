@@ -132,9 +132,13 @@ export function drawRouteLine(map, response, show_shortest = false, show_fastest
   };
 }
 
+/**
+ * Create destination's infowindow
+ * @param {Object} map Map Object
+ * @param {Object} route Route object
+ */
 export function createDestinationInfoWindow(map, route) {
   if (route) {
-    // console.log(getDistance(route))
     var leg = route.legs[0];
     var last_step = leg.steps[leg.steps.length - 1];
 
@@ -143,7 +147,7 @@ export function createDestinationInfoWindow(map, route) {
     distance_title.setAttribute('class', 'distance_title');
 
     var distance_value = document.createElement("span");
-    distance_value.innerHTML = leg.distance.text;
+    distance_value.innerHTML = getDistance(route);
     distance_value.setAttribute('class', 'distance_value');
 
     var duration_title = document.createElement("span");
@@ -151,7 +155,7 @@ export function createDestinationInfoWindow(map, route) {
     duration_title.setAttribute('class', 'duration_title');
 
     var duration_value = document.createElement("span");
-    duration_value.innerHTML = leg.duration.text;
+    duration_value.innerHTML = getDuration(route);
     duration_value.setAttribute('class', 'duration_value');
 
     var div_distance = document.createElement('div');
@@ -177,12 +181,30 @@ export function createDestinationInfoWindow(map, route) {
 
     return route_infowindow;
   }
+}
 
-  export function getDistance(route) {
-    if (route == undefined) {
-      return null;
-    }
-    var leg = route.legs[0];
-    return leg.distance.text;
+/** 
+* Get distance value from route
+* @param {Object} route - Route Object
+* @return {String} Distance value
+*/
+export function getDistance(route) {
+  if (route == undefined) {
+    return null;
   }
+  var leg = route.legs[0];
+  return leg.distance.text;
+}
+
+/**
+* Get duration value from route
+* @param {Object} route - Route Object
+* @return {String} Duration value
+*/
+export function getDuration(route) {
+  if (route == undefined) {
+    return null;
+  }
+  var leg = route.legs[0];
+  return leg.distance.text;
 }
