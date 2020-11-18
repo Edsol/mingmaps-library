@@ -132,9 +132,10 @@ export function drawRouteLine(map, response, show_shortest = false, show_fastest
   };
 }
 
-export function createDestinationInfoWindow(map, point) {
-  if (point) {
-    var leg = point.legs[0];
+export function createDestinationInfoWindow(map, route) {
+  if (route) {
+    // console.log(getDistance(route))
+    var leg = route.legs[0];
     var last_step = leg.steps[leg.steps.length - 1];
 
     var distance_title = document.createElement("span");
@@ -175,5 +176,13 @@ export function createDestinationInfoWindow(map, point) {
     }, true);
 
     return route_infowindow;
+  }
+
+  export function getDistance(route) {
+    if (route == undefined) {
+      return null;
+    }
+    var leg = route.legs[0];
+    return leg.distance.text;
   }
 }
