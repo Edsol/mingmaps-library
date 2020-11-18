@@ -16,7 +16,5 @@
     "url": "https://github.com/Edsol/mingmaps-library/issues"
   },
   "homepage": "https://github.com/Edsol/mingmaps-library#readme",
-  "dependencies": {
-    "lodash-es": "^4.17.15"
-  }
+  "dependencies": {}
 }
