@@ -1,3 +1,5 @@
+import _ from "../node_modules/lodash-es/lodash.js"
+
 /** 
 * Create new infowindow
 * @param {String} map - Map object
@@ -39,7 +41,7 @@ export function close(infowindow) {
 export function closeAll(infowindow_list) {
   if (infowindow_list) {
     infowindow_list = Object.values(infowindow_list);
-    infowindow_list.forEach(function (index) {
+    _.forEach(infowindow_list, function (index) {
       index.close();
     });
   }

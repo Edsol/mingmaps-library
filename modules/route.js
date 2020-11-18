@@ -1,4 +1,5 @@
 import * as Infowindow from './infowindow.js';
+import _ from "../node_modules/lodash-es/lodash.js"
 
 let directionsService = new google.maps.DirectionsService();
 var delayFactor = 1;
@@ -73,13 +74,13 @@ export function drawRouteLine(map, response, show_shortest = false, show_fastest
   var directionsDisplay = new google.maps.DirectionsRenderer();
   directionsDisplay.setMap(map);
 
-  response.routes.forEach(function (route) {
-    if (route.legs[0].distance.value < shortest) shortest = route.legs[0].distance.value;
-    if (route.legs[0].duration.value < fastest) fastest = route.legs[0].duration.value;
-  })
+  _.forEach(response.routes, function (route) {
+    if (getDistanceValue(route) < shortest) shortest = getDistanceValue(route);
+    if (getDurationValue(route) < fastest) fastest = getDurationValue(route);
+  });
 
-  response.routes.forEach(function (route, index) {
-    if (route.legs[0].duration.value == fastest && show_shortest) {
+  _.forEach(response.routes, function (route, index) {
+    if (getDurationValue(route) == fastest && show_shortest) {
       var direction_render = new google.maps.DirectionsRenderer({
         map: map,
         directions: response,
@@ -98,7 +99,7 @@ export function drawRouteLine(map, response, show_shortest = false, show_fastest
         direction: direction_render
       };
     }
-    if (route.legs[0].distance.value == shortest && show_fastest) {
+    if (getDurationValue(route) == shortest && show_fastest) {
       var random_color = "#" + Math.floor(Math.random() * 16777215).toString(16);
       var direction_render = new google.maps.DirectionsRenderer({
         map: map,
@@ -120,7 +121,7 @@ export function drawRouteLine(map, response, show_shortest = false, show_fastest
         direction: direction_render
       };
     }
-  })
+  });
 
   if (typeof callback == "function") {
     callback(fastest_route, shortest_route);
@@ -147,7 +148,7 @@ export function createDestinationInfoWindow(map, route) {
     distance_title.setAttribute('class', 'distance_title');
 
     var distance_value = document.createElement("span");
-    distance_value.innerHTML = getDistance(route);
+    distance_value.innerHTML = getDistanceText(route);
     distance_value.setAttribute('class', 'distance_value');
 
     var duration_title = document.createElement("span");
@@ -155,7 +156,7 @@ export function createDestinationInfoWindow(map, route) {
     duration_title.setAttribute('class', 'duration_title');
 
     var duration_value = document.createElement("span");
-    duration_value.innerHTML = getDuration(route);
+    duration_value.innerHTML = getDurationText(route);
     duration_value.setAttribute('class', 'duration_value');
 
     var div_distance = document.createElement('div');
@@ -188,7 +189,33 @@ export function createDestinationInfoWindow(map, route) {
 * @param {Object} route - Route Object
 * @return {String} Distance value
 */
-export function getDistance(route) {
+export function getDistanceValue(route) {
+  if (route == undefined) {
+    return null;
+  }
+  var leg = route.legs[0];
+  return leg.distance.value;
+}
+
+/**
+* Get duration value from route
+* @param {Object} route - Route Object
+* @return {String} Duration value
+*/
+export function getDurationValue(route) {
+  if (route == undefined) {
+    return null;
+  }
+  var leg = route.legs[0];
+  return leg.distance.value;
+}
+
+/** 
+* Get distance text from route
+* @param {Object} route - Route Object
+* @return {String} Distance value
+*/
+export function getDistanceText(route) {
   if (route == undefined) {
     return null;
   }
@@ -197,11 +224,11 @@ export function getDistance(route) {
 }
 
 /**
-* Get duration value from route
+* Get duration text from route
 * @param {Object} route - Route Object
 * @return {String} Duration value
 */
-export function getDuration(route) {
+export function getDurationText(route) {
   if (route == undefined) {
     return null;
   }
