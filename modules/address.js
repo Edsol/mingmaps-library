@@ -41,10 +41,10 @@ export function parseAddressComponents(address_components) {
     home: ["street_number"],
     postal_code: ["postal_code"],
     street: ["street_address", "route"],
+    municipality: ["administrative_area_level_3"],
     province: ["administrative_area_level_2"],
     region: [
       "administrative_area_level_1",
-      "administrative_area_level_3",
       "administrative_area_level_4",
       "administrative_area_level_5"
     ],
