@@ -82,3 +82,19 @@ export function parseAddressComponents(address_components) {
 
   return address;
 }
+
+export function getCoordinate(place, array = false) {
+  if (!place) {
+    return null;
+  }
+  var lat = place.geometry.location.lat();
+  var lng = place.geometry.location.lng();
+
+  if (array == true) {
+    return [lat, lng];
+  }
+  return {
+    lat: lat,
+    lng: lng
+  };
+}
