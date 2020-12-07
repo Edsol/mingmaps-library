@@ -30,3 +30,55 @@ export function addAddressListener(element_id, country, callback) {
     }
   });
 }
+
+/** 
+* Parse address_components information by address autocomplete
+* @param {Array} address_components - 
+* @return {Array} Structured data response
+*/
+export function parseAddressComponents(address_components) {
+  var associations = {
+    home: ["street_number"],
+    postal_code: ["postal_code"],
+    street: ["street_address", "route"],
+    municipality: ["administrative_area_level_3"],
+    province: ["administrative_area_level_2"],
+    region: [
+      "administrative_area_level_1",
+      "administrative_area_level_4",
+      "administrative_area_level_5"
+    ],
+    city: [
+      "locality",
+      "sublocality",
+      "sublocality_level_1",
+      "sublocality_level_2",
+      "sublocality_level_3",
+      "sublocality_level_4"
+    ],
+    country: ["country"]
+  };
+
+  var address = {
+    home: "",
+    postal_code: "",
+    street: "",
+    province: "",
+    region: "",
+    city: "",
+    country: ""
+  };
+
+  address_components.forEach(component => {
+    for (var association in associations) {
+      if (associations[association].indexOf(component.types[0]) !== -1) {
+        address[association] = {
+          short: component.short_name,
+          long: component.long_name
+        };
+      }
+    }
+  });
+
+  return address;
+}

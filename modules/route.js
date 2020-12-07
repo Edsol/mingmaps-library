@@ -21,21 +21,23 @@ export function drawRouteBetweenPoints(map, start_point, end_point, show_info = 
 
   getDirectionsRoute(route, function (status, response) {
     drawRouteLine(map, response, false, true, (fastest, shortest) => {
-      if (show_info) {
-        fastest['infowindow'] = createDestinationInfoWindow(map, fastest.route);
+      if (fastest) {
+        if (show_info) {
+          fastest['infowindow'] = createDestinationInfoWindow(map, fastest.route);
+        }
+
+        result_routes = {
+          route: fastest.route,
+          direction: fastest.direction,
+          infowindow: fastest.infowindow
+        };
+
+        if (typeof callback == "function") {
+          callback(status, response, result_routes);
+        }
+
+        return result_routes;
       }
-
-      result_routes = {
-        route: fastest.route,
-        direction: fastest.direction,
-        infowindow: fastest.infowindow
-      };
-
-      if (typeof callback == "function") {
-        callback(status, response, result_routes);
-      }
-
-      return result_routes;
     });
   });
 
@@ -74,12 +76,15 @@ export function drawRouteLine(map, response, show_shortest = false, show_fastest
   directionsDisplay.setMap(map);
 
   response.routes.forEach(function (route) {
-    if (getDistanceValue(route) < shortest) shortest = getDistanceValue(route);
-    if (getDurationValue(route) < fastest) fastest = getDurationValue(route);
+    var duration_value = getDurationValue(route);
+    if (duration_value < shortest) shortest = duration_value;
+    if (duration_value < fastest) fastest = duration_value;
   });
 
   response.routes.forEach(function (route, index) {
-    if (getDurationValue(route) == fastest && show_shortest) {
+    var duration_value = getDurationValue(route);
+
+    if (duration_value === fastest && show_shortest) {
       var direction_render = new google.maps.DirectionsRenderer({
         map: map,
         directions: response,
@@ -98,7 +103,8 @@ export function drawRouteLine(map, response, show_shortest = false, show_fastest
         direction: direction_render
       };
     }
-    if (getDurationValue(route) == shortest && show_fastest) {
+
+    if (duration_value === shortest && show_fastest) {
       var random_color = "#" + Math.floor(Math.random() * 16777215).toString(16);
       var direction_render = new google.maps.DirectionsRenderer({
         map: map,
@@ -205,8 +211,9 @@ export function getDurationValue(route) {
   if (route == undefined) {
     return null;
   }
+
   var leg = route.legs[0];
-  return leg.distance.value;
+  return leg.duration.value;
 }
 
 /** 
@@ -232,5 +239,5 @@ export function getDurationText(route) {
     return null;
   }
   var leg = route.legs[0];
-  return leg.distance.text;
+  return leg.duration.text;
 }
