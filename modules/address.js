@@ -8,6 +8,8 @@
 //   this.Translator.loadLanguage();
 // }
 
+var address_search;
+
 /**
 * Add a "Place Autocomplete Listener" on specified element
 * @param {String} element - ID of element to bind at listener
