@@ -32,6 +32,24 @@ export function addAddressListener(element_id, country, callback) {
     }
   });
 }
+/**
+ * @param  {} address_components
+ * @param  {} callback
+ */
+export function reduce(address_components, callback) {
+  var response = {};
+
+  address_components.forEach((element) => {
+    response[element.types[0]] = element.short_name;
+  });
+
+  if (typeof callback == "function") {
+    callback(response);
+  }
+
+  return response;
+}
+
 
 /** 
 * Parse address_components information by address autocomplete
