@@ -24,6 +24,7 @@ export function addAddressListener(element_id, country, callback) {
 
 	autocomplete.addListener('place_changed', function () {
 		var place = autocomplete.getPlace();
+		console.log('autocomplete place', place);
 		if (typeof callback == 'function') {
 			callback(place);
 		}
@@ -97,6 +98,10 @@ export function parseAddressComponents(address_components) {
 	return address;
 }
 
+/**
+ * @param  {} place
+ * @param  {} array
+ */
 export function getCoordinate(place, array = false) {
 	if (!place) {
 		return null;
@@ -111,4 +116,48 @@ export function getCoordinate(place, array = false) {
 		lat: lat,
 		lng: lng,
 	};
+}
+
+export function isValidCoordinate(lat, lng) {
+	return !isNaN(lat) && lat >= -90 && lat <= 90 && !isNaN(lng) && lng >= -180 && lng <= 180;
+}
+
+export async function reversePosition(lat, lng) {
+	if (!isValidCoordinate(lat, lng)) {
+		console.error(`invalid or malformed lat and lng (${lat}, ${lng})`);
+		return;
+	}
+	return await getPlaceFromCoordinates(lat, lng);
+}
+
+async function getPlaceFromCoordinates(lat, lng) {
+	const latlng = {
+		lat: lat,
+		lng: lng,
+	};
+
+	const geocoder = new google.maps.Geocoder();
+
+	const result = await geocoder.geocode(
+		{
+			location: latlng,
+		},
+		(results, status) => {
+			if (status !== 'OK') {
+				console.log('Geocoder failed:', status);
+				return;
+			}
+
+			if (results.length === 0) {
+				console.log('No results found');
+				return false;
+			}
+
+			console.log('Address finded:', results[0].formatted_address);
+			return results[0];
+		}
+	);
+
+	console.log('getPlaceFromCoordinates', result);
+	return result;
 }
