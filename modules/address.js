@@ -24,7 +24,7 @@ export function addAddressListener(element_id, country, callback) {
 
 	autocomplete.addListener('place_changed', function () {
 		var place = autocomplete.getPlace();
-		console.log('autocomplete place', place);
+
 		if (typeof callback == 'function') {
 			callback(place);
 		}
@@ -144,20 +144,17 @@ async function getPlaceFromCoordinates(lat, lng) {
 		},
 		(results, status) => {
 			if (status !== 'OK') {
-				console.log('Geocoder failed:', status);
+				console.error('Geocoder failed:', status);
 				return;
 			}
 
 			if (results.length === 0) {
-				console.log('No results found');
+				console.error('No results found');
 				return false;
 			}
 
-			console.log('Address finded:', results[0].formatted_address);
 			return results[0];
 		}
 	);
-
-	console.log('getPlaceFromCoordinates', result);
 	return result;
 }
